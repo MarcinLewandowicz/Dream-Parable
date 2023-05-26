@@ -13,14 +13,15 @@ public class AgentSpanwer : MonoBehaviour
     [Range(2, 6)]
     [SerializeField] private float agentSpawnInterval = 3f;
     private float timer = 0f;
+    [Range(0,30)]
     [SerializeField] private int maxAgentsNumber = 30;
-    [SerializeField] private int currentAgentsNumber;
+    private int currentAgentsNumber;
 
     [Space(10)]
     [Header("Spawn points settings")]
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnPointsThreshold = 0.5f;
-
+    [SerializeField] private LayerMask playerLayerMask;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class AgentSpanwer : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
         SpawnStartingAgents();
     }
 
@@ -43,8 +45,7 @@ public class AgentSpanwer : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-
-        if(currentAgentsNumber == maxAgentsNumber) { return; }
+        if (currentAgentsNumber == maxAgentsNumber) { return; }
         if (timer >= agentSpawnInterval)
         {
             SpawnAgent();
@@ -59,7 +60,8 @@ public class AgentSpanwer : MonoBehaviour
 
     private void SpawnAgent()
     {
-        Instantiate(agent, GetRandomEmptySpawnPoint().position, Quaternion.identity);
+        if (GetRandomEmptySpawnPoint() == null) { return; }
+        Instantiate(agent, GetRandomEmptySpawnPoint().position, GetRandomEmptySpawnPoint().rotation);
         currentAgentsNumber++;
     }
 
@@ -76,24 +78,32 @@ public class AgentSpanwer : MonoBehaviour
         List<Transform> emptySpawnPoints = new List<Transform>();
         foreach (Transform spawnPoint in spawnPoints)
         {
-            Collider[] hitColliders = Physics.OverlapSphere(spawnPoint.position, spawnPointsThreshold);
-            if (hitColliders.Length == 0)
+            bool spawnPointOccupied = Physics.CheckSphere(spawnPoint.position, spawnPointsThreshold, playerLayerMask);
+            if (!spawnPointOccupied)
             {
                 emptySpawnPoints.Add(spawnPoint);
             }
+        }
+        if(emptySpawnPoints.Count == 0)
+        {
+            return null;
         }
         return emptySpawnPoints;
     }
 
     private Transform GetRandomEmptySpawnPoint()
     {
-        Transform emptySpawnPoint = GetEmptySpawnPoints()[Random.Range(0, GetEmptySpawnPoints().Count)];
-        return emptySpawnPoint;
+        if (GetEmptySpawnPoints() != null)
+        {
+            Transform emptySpawnPoint = GetEmptySpawnPoints()[Random.Range(0, GetEmptySpawnPoints().Count)];
+            return emptySpawnPoint;
+        }
+        return null;
     }
 
     private void OnDrawGizmos()
     {
-        foreach(Transform spawnPoint in spawnPoints)
+        foreach (Transform spawnPoint in spawnPoints)
         {
             Gizmos.DrawSphere(spawnPoint.position, spawnPointsThreshold);
         }
