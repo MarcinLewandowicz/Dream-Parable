@@ -408,8 +408,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 2325853237611479080, guid: b0c9b157098e049369e07e35fb5b5c1a, type: 3}
   startAgentsNumber: 3
-  agentsSpawnInterval: 3
-  maxAgentsNumber: 30
+  agentSpawnInterval: 3.61
+  maxAgentsNumber: 5
   currentAgentsNumber: 0
   spawnPoints:
   - {fileID: 160700554}
@@ -418,7 +418,6 @@ MonoBehaviour:
   - {fileID: 58159301}
   - {fileID: 81094216}
   spawnPointsThreshold: 0.5
-  testList: []
 --- !u!4 &935358953
 Transform:
   m_ObjectHideFlags: 0
