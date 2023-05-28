@@ -942,8 +942,8 @@ MonoBehaviour:
   agentSpeed: 2
   startAgentsNumber: 3
   maxAgentsNumber: 10
-  agentSpawnMinInterval: 2.67
-  agentSpawnMaxInterval: 4.28
+  agentSpawnMinInterval: 3.11
+  agentSpawnMaxInterval: 3.49
   agentNameMinLength: 4
   agentNameMaxLength: 9
   spawnPoints:
