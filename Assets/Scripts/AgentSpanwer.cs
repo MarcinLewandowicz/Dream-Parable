@@ -8,6 +8,7 @@ public class AgentSpanwer : MonoBehaviour
 
     [Header("Agent settins")]
     [SerializeField] private GameObject agent;
+    [SerializeField] private float agentSpeed;
     [Range(3, 5)]
     [SerializeField] private int startAgentsNumber = 3;
     [Range(2, 6)]
@@ -16,6 +17,7 @@ public class AgentSpanwer : MonoBehaviour
     [Range(0,30)]
     [SerializeField] private int maxAgentsNumber = 30;
     private int currentAgentsNumber;
+    public AgentSelectManager agentSelectManager { get; private set; }
 
     [Space(10)]
     [Header("Spawn points settings")]
@@ -23,9 +25,17 @@ public class AgentSpanwer : MonoBehaviour
     [SerializeField] private float spawnPointsThreshold = 0.5f;
     [SerializeField] private LayerMask playerLayerMask;
 
+    [Space(10)]
+    [Header("Map settings")]
+    [Min(10)]
+    [SerializeField] private float mapXLength;
+    [Min(10)]
+    [SerializeField] private float mapZLength;
+
+
     private void Awake()
     {
-        if (instance == null)
+        if(instance == null)
         {
             instance = this;
         }
@@ -33,6 +43,8 @@ public class AgentSpanwer : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        agentSelectManager = GetComponent<AgentSelectManager>();
     }
 
     private void Start()
@@ -53,16 +65,21 @@ public class AgentSpanwer : MonoBehaviour
         }
     }
 
-    public void DecreaseAgentsNumber()
+    public void OnAgentsDeath(GameObject agent)
     {
         currentAgentsNumber--;
+        agentSelectManager.RemoveAgentToSelect(agent);
     }
 
     private void SpawnAgent()
     {
         if (GetRandomEmptySpawnPoint() == null) { return; }
-        Instantiate(agent, GetRandomEmptySpawnPoint().position, GetRandomEmptySpawnPoint().rotation);
+        GameObject spawnedAgent = Instantiate(agent, GetRandomEmptySpawnPoint().position, GetRandomEmptySpawnPoint().rotation);
+        AgentLocomotion agentLocomotion = agent.GetComponent<AgentLocomotion>();
+        agentLocomotion.SetAgentSpeed(agentSpeed);
+        agentLocomotion.SetFloorSize(mapXLength, mapZLength);
         currentAgentsNumber++;
+        agentSelectManager.AddAgentToSelect(spawnedAgent);
     }
 
     private void SpawnStartingAgents()

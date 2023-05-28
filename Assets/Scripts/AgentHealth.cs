@@ -22,7 +22,7 @@ public class AgentHealth : MonoBehaviour
 
     private void DeathBehaviour()
     {
-        AgentSpanwer.instance.DecreaseAgentsNumber();
+        AgentSpanwer.instance.OnAgentsDeath(gameObject);
         Destroy(gameObject);
     }
 }

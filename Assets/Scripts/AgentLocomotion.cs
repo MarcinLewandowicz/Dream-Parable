@@ -6,7 +6,9 @@ using UnityEngine;
 public class AgentLocomotion : MonoBehaviour
 {
     [SerializeField] private float agentSpeed;
-    [SerializeField] private float floorLenght;
+    [SerializeField] private float floorXLength;
+    [SerializeField] private float floorZLength;
+
     private AgentHealth agentHealth;
 
     void Start()
@@ -19,15 +21,21 @@ public class AgentLocomotion : MonoBehaviour
 
         transform.Translate(Vector3.forward * agentSpeed * Time.deltaTime);
 
-        if(Mathf.Abs(transform.position.x) >= floorLenght || Mathf.Abs(transform.position.z) >= floorLenght)
+        if(Mathf.Abs(transform.position.x) >= floorXLength/2 || Mathf.Abs(transform.position.z) >= floorZLength/2)
         {
             TurnBack();
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            ChangeDirection();
-        }
+    public void SetAgentSpeed(float speed)
+    {
+        agentSpeed = speed;
+    }
+
+    public void SetFloorSize(float floorXLength, float floorZLength)
+    {
+        this.floorXLength = floorXLength;
+        this.floorZLength = floorZLength;
     }
 
     private void ChangeDirection()
@@ -39,8 +47,6 @@ public class AgentLocomotion : MonoBehaviour
     {
         transform.Rotate(0, transform.rotation.y - 180, 0);
     }
-
-
 
     private void OnCollisionEnter(Collision collision)
     {
