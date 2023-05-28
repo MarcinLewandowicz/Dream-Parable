@@ -6,7 +6,7 @@ public class AgentSpanwer : MonoBehaviour
 {
     public static AgentSpanwer instance;
 
-    [Header("Agent settins")]
+    [Header("Agent settings")]
     [SerializeField] private GameObject agent;
     [SerializeField] private float agentSpeed;
     [Range(3, 5)]
@@ -18,6 +18,12 @@ public class AgentSpanwer : MonoBehaviour
     [SerializeField] private int maxAgentsNumber = 30;
     private int currentAgentsNumber;
     public AgentSelectManager agentSelectManager { get; private set; }
+    [Header("Agent name settings")]
+    [Range(3, 6)]
+    [SerializeField] private int agentNameMinLength = 3;
+    [Range(6, 10)]
+    [SerializeField] private int agentNameMaxLength = 8;
+    private NameGenerator nameGenerator = new();
 
     [Space(10)]
     [Header("Spawn points settings")]
@@ -75,6 +81,7 @@ public class AgentSpanwer : MonoBehaviour
     {
         if (GetRandomEmptySpawnPoint() == null) { return; }
         GameObject spawnedAgent = Instantiate(agent, GetRandomEmptySpawnPoint().position, GetRandomEmptySpawnPoint().rotation);
+        spawnedAgent.name = nameGenerator.GetRandomName(Random.Range(agentNameMinLength, agentNameMaxLength));
         AgentLocomotion agentLocomotion = agent.GetComponent<AgentLocomotion>();
         agentLocomotion.SetAgentSpeed(agentSpeed);
         agentLocomotion.SetFloorSize(mapXLength, mapZLength);

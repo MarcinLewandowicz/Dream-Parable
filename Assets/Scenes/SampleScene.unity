@@ -510,6 +510,8 @@ MonoBehaviour:
   startAgentsNumber: 3
   agentSpawnInterval: 2.44
   maxAgentsNumber: 10
+  agentNameMinLength: 4
+  agentNameMaxLength: 9
   spawnPoints:
   - {fileID: 160700554}
   - {fileID: 643609948}
@@ -549,8 +551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fbb5145cfa0e40208cdb07ed9983a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentsToSelect: []
-  selectedAgent: {fileID: 0}
+  AgentsToSelect: []
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
