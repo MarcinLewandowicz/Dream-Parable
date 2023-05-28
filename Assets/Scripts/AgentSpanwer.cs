@@ -11,11 +11,15 @@ public class AgentSpanwer : MonoBehaviour
     [SerializeField] private float agentSpeed;
     [Range(3, 5)]
     [SerializeField] private int startAgentsNumber = 3;
-    [Range(2, 6)]
-    [SerializeField] private float agentSpawnInterval = 3f;
     private float timer = 0f;
     [Range(0,30)]
     [SerializeField] private int maxAgentsNumber = 30;
+    [Header("Spawn interval settings")]
+    [Range(2,6)]
+    [SerializeField] private float agentSpawnMinInterval = 2f;
+    [Range(2, 6)]
+    [SerializeField] private float agentSpawnMaxInterval = 3f;
+    private float currentSpawnInterval;
     private int currentAgentsNumber;
     public AgentSelectManager agentSelectManager { get; private set; }
     [Header("Agent name settings")]
@@ -64,7 +68,7 @@ public class AgentSpanwer : MonoBehaviour
         timer += Time.deltaTime;
 
         if (currentAgentsNumber == maxAgentsNumber) { return; }
-        if (timer >= agentSpawnInterval)
+        if (timer >= currentSpawnInterval)
         {
             SpawnAgent();
             timer = 0f;
@@ -87,6 +91,7 @@ public class AgentSpanwer : MonoBehaviour
         agentLocomotion.SetFloorSize(mapXLength, mapZLength);
         currentAgentsNumber++;
         agentSelectManager.AddAgentToSelect(spawnedAgent);
+        currentSpawnInterval = Random.Range(agentSpawnMinInterval, agentSpawnMaxInterval);
     }
 
     private void SpawnStartingAgents()
